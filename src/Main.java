@@ -1,6 +1,12 @@
+import com.mitchtalmadge.asciidata.graph.ASCIIGraph;
+import com.mitchtalmadge.asciidata.table.ASCIITable;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.sql.SQLOutput;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.BufferedReader;
@@ -9,25 +15,93 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 
+
 public class Main {
-
     private static final String CLEAR_SCREEN = "\033[H\033[2J";
-    private static final String RESET_CURSOR = "\033[H";
+
+    public static void  testsite() {
+        System.out.println("Test site");
+
+        String[] headers = new String[]{"ID", "Name", "Email"};
+        String[][] data = new String[][]{
+                {"123", "Alfred Alan", "aalan@gmail.com"},
+                {"223", "Alison Smart", "asmart@gmail.com"},
+                {"256", "Ben Bessel", "benb@outlook.com"},
+                {"374", "John Roberts", "johnrob@company.com"},
+        };
+
+        String tbl = ASCIITable.fromData(headers, data).toString();
+        System.out.println(tbl);
 
 
-    public static void timesleep()
-    {
+    }
+
+
+
+    public static void MonkChart() {
+        String ChartData = "results.csv"; // Path to your CSV file
+        List<Double> yValues = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ChartData))) {
+            String line;
+            boolean isHeader = true;
+
+            while ((line = br.readLine()) != null) {
+                // Skip the header line
+                if (isHeader) {
+                    isHeader = false;
+                    continue;
+                }
+                // Split the line by comma
+                String[] data = line.split(",");
+                double yValue;
+
+                try {
+                    yValue = Double.parseDouble(data[1]);
+                    yValues.add(yValue);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid Number: " + data[1]);
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Convert List<Double> to double[]
+        double[] yArray = new double[yValues.size()];
+        for (int i = 0; i < yValues.size(); i++) {
+            yArray[i] = yValues.get(i);
+        }
+
+        // Create and display the ASCII chart
+        String chart = ASCIIGraph
+                .fromSeries(yArray)
+                .withTickFormat(new DecimalFormat("##0.00000"))
+                .withNumRows(8)
+                .plot();
+
+        System.out.println(chart);
+    }
+
+    public static void timesleep() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
+
     public static void main(String[] args) {
+
+
         Scanner scanner = new Scanner(System.in);
+
         boolean running = true;
+        System.out.println("WELCOME TO THE GAME");
+        System.out.println(CLEAR_SCREEN);
 
         System.out.println("=====================================");
         System.out.println("   _____   __                    __ ");
@@ -40,6 +114,7 @@ public class Main {
         System.out.println("= Reportbook");
         System.out.println("= Calculator");
         System.out.println("= Fast Exit");
+        System.out.println("= MonkeyType PG");
         System.out.print("What do you want to do? ");
 
         String answer = scanner.nextLine();
@@ -49,12 +124,14 @@ public class Main {
 
         else if (answer.equalsIgnoreCase("reportbook")) {
             timesleep();
-            System.out.print(CLEAR_SCREEN);
-            reportmenu();
-        }
 
-        else if (answer.equalsIgnoreCase("calculator")) {
-            //calculator();
+            reportmenu();
+        } else if (answer.equalsIgnoreCase("Monkeytype")) {
+           MonkChart();
+
+
+        } else if (answer.equalsIgnoreCase("testing")) {
+            testsite();
 
             scanner.close();
         }
