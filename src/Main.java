@@ -1,40 +1,66 @@
 import com.mitchtalmadge.asciidata.graph.ASCIIGraph;
-import com.mitchtalmadge.asciidata.table.ASCIITable;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 
 
 public class Main {
-    private static final String CLEAR_SCREEN = "\033[H\033[2J";
 
-    public static void  testsite() {
-        System.out.println("Test site");
 
-        String[] headers = new String[]{"ID", "Name", "Email"};
-        String[][] data = new String[][]{
-                {"123", "Alfred Alan", "aalan@gmail.com"},
-                {"223", "Alison Smart", "asmart@gmail.com"},
-                {"256", "Ben Bessel", "benb@outlook.com"},
-                {"374", "John Roberts", "johnrob@company.com"},
-        };
+    public static void main(String[] args) {
 
-        String tbl = ASCIITable.fromData(headers, data).toString();
-        System.out.println(tbl);
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
 
+        System.out.println("                         )/_");
+        System.out.println("               _.--..---\"-,--c_");
+        System.out.println("          \\L..'           ._O__)_");
+        System.out.println("  ,-.     _.+  _  \\..--( /             ");
+        System.out.println("    `\\.-''__.-' \\ (     \\_      ");
+        System.out.println("      `'''       `\\__   /\\");
+        System.out.println("                  ')");
+        System.out.println("===================================");
+        System.out.println("         WELCOME TO MY MENU       ");
+        System.out.println("===================================");
+        System.out.println("          [1] Recordbook          ");
+        System.out.println("          [2] Calculator          ");
+        System.out.println("          [3] Monkeytype          ");
+        System.out.println("===================================");
+        System.out.print("       Please select an option:  ");
+
+
+        String answer = scanner.nextLine();
+        if (answer.equalsIgnoreCase("exit")) {
+            running = false;
+        }
+
+        else if (answer.equalsIgnoreCase("recordbook")) {
+            timesleep();
+
+            recordbook();
+        } else if (answer.equalsIgnoreCase("Monkeytype")) {
+
+            MonkChart();
+
+
+        } else if (answer.equalsIgnoreCase("calculator")) {
+            calculator();
+
+            scanner.close();
+        }
+        else {
+            System.out.println("Invalid option try again");
+            main(args);
+        }
 
     }
+
 
 
 
@@ -69,20 +95,20 @@ public class Main {
             return;
         }
 
-        // Convert List<Double> to double[]
+
         double[] yArray = new double[yValues.size()];
         for (int i = 0; i < yValues.size(); i++) {
             yArray[i] = yValues.get(i);
         }
 
-        // Create and display the ASCII chart
         String chart = ASCIIGraph
                 .fromSeries(yArray)
                 .withTickFormat(new DecimalFormat("##0.00000"))
                 .withNumRows(8)
                 .plot();
-
+        System.out.println("-----------------------------------------");
         System.out.println(chart);
+        System.out.println("-----------------------------------------");
     }
 
     public static void timesleep() {
@@ -94,51 +120,74 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
-
-
+    public static  void calculator() {
+        boolean running = true;
+        while (running) {
         Scanner scanner = new Scanner(System.in);
 
-        boolean running = true;
-        System.out.println("WELCOME TO THE GAME");
-        System.out.println(CLEAR_SCREEN);
 
-        System.out.println("=====================================");
-        System.out.println("   _____   __                    __ ");
-        System.out.println("  / ___/  / /_  ____ _   _____  / /_");
-        System.out.println("  \\__ \\  / __/ / __ `/  / ___/ / __/");
-        System.out.println(" ___/ / / /_  / /_/ /  / /    / /_  ");
-        System.out.println("/____/  \\__/  \\__,_/  /_/     \\__/  ");
-        System.out.println("                                   ");
-        System.out.println("=====================================");
-        System.out.println("= Reportbook");
-        System.out.println("= Calculator");
-        System.out.println("= Fast Exit");
-        System.out.println("= MonkeyType PG");
-        System.out.print("What do you want to do? ");
+        System.out.print("Gib die erste Zahl ein: ");
+        double num1 = scanner.nextDouble();
 
-        String answer = scanner.nextLine();
-        if (answer.equalsIgnoreCase("exit")) {
-            running = false;
+
+        System.out.print("Gib die zweite Zahl ein: ");
+        double num2 = scanner.nextDouble();
+
+
+        System.out.print("Wähle einen Operator (+, -, *, /): ");
+        char operator = scanner.next().charAt(0);
+
+        double result = 0;
+
+
+        switch (operator) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                if (num2 != 0) {
+                    result = num1 / num2;
+                } else {
+                    System.out.println("Fehler: Division durch Null ist nicht erlaubt.");
+                    return;
+                }
+                break;
+            default:
+                System.out.println("Ungültiger Operator!");
+                return;
         }
 
-        else if (answer.equalsIgnoreCase("reportbook")) {
-            timesleep();
 
-            reportmenu();
-        } else if (answer.equalsIgnoreCase("Monkeytype")) {
-           MonkChart();
+        updateDisplay(result);
+    }}
 
 
-        } else if (answer.equalsIgnoreCase("testing")) {
-            testsite();
+    public static void updateDisplay(double value) {
 
-            scanner.close();
-        }
-
+        System.out.println(" _____________________ ");
+        System.out.println("|  _________________  |");
+        System.out.printf("| | JO         %5.2f | |\n", value);
+        System.out.println("| |_________________| |");
+        System.out.println("|  ___ ___ ___   ___  |");
+        System.out.println("| | 7 | 8 | 9 | | + | |");
+        System.out.println("| |___|___|___| |___| |");
+        System.out.println("| | 4 | 5 | 6 | | - | |");
+        System.out.println("| |___|___|___| |___| |");
+        System.out.println("| | 1 | 2 | 3 | | x | |");
+        System.out.println("| |___|___|___| |___| |");
+        System.out.println("| | . | 0 | = | | / | |");
+        System.out.println("| |___|___|___| |___| |");
+        System.out.println("|_____________________|");
     }
 
-    private static void reportmenu() {
+
+    private static void recordbook() {
         final String INPUT_CSV_FILE = "day_answer.csv";
         String csvFilePath = "day_answer.csv";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -156,16 +205,16 @@ public class Main {
             System.out.println("   \\O    O\\ O/   \\/_____O/");
             System.out.println("    \\O____O\\/ ))             ))");
             System.out.println("  ((");
-            System.out.println("========================================================");
-            System.out.println("                        THE MENU                        ");
-            System.out.println("========================================================");
-            System.out.println("= Create              ");
-            System.out.println("= Edit                ");
-            System.out.println("= Exit                ");
-            System.out.println("= List                ");
-            System.out.println("= Search              ");
-            System.out.println("=====================");
-            System.out.print("What is your Choice: ");
+            System.out.println("===================================");
+            System.out.println("         WELCOME TO MY MENU        ");
+            System.out.println("===================================");
+            System.out.println("          [1] Create               ");
+            System.out.println("          [2] Edit                 ");
+            System.out.println("          [3] Search               ");
+            System.out.println("          [4] List                 ");
+            System.out.println("          [5] Exit                 ");
+            System.out.println("===================================");
+            System.out.print("     Please select an option:        ");
 
             while (running) {
                 String choice = scanner.nextLine();
@@ -175,7 +224,7 @@ public class Main {
                 switch (choice.toLowerCase()) {
 
                     case "1":
-                    case "create":
+                    case "hassann":
                         // Create operation
                         System.out.print("Enter Report Date (yyyy-MM-dd): ");
                         String date = scanner.nextLine();
@@ -341,4 +390,5 @@ public class Main {
             scanner.close();
         }
     }
+
 }
